@@ -18,7 +18,7 @@ ext_salida = argumentos.o
 #funcion que usa pandoc para convertir el archivo
 def ejecutarPandoc(archivo, ext_entrada, ext_salida):
 	archivo_salida = archivo.split(".")
-	pandoc_parametros = split("pandoc -f {} -t {} -o {} {}".format(ext_entrada,ext_salida, archivo_salida[0] + "." + ext_salida, archivo))
+	pandoc_parametros = split("pandoc -f {} -t {} -o {} {}".format(ext_entrada, ext_salida, archivo_salida[0] + "." + ext_salida, archivo))
 	pandoc_command = subprocess.run(pandoc_parametros)
 
 bash_filter = split("egrep '*.{}$'".format(ext_entrada))
@@ -26,6 +26,9 @@ bash_filter = split("egrep '*.{}$'".format(ext_entrada))
 #Ejecuta el equivalente a $ ls | egrep ''
 ls = subprocess.Popen(["ls"], stdout=subprocess.PIPE, text=True)
 search = subprocess.Popen(bash_filter,stdin=ls.stdout, stdout=subprocess.PIPE)
+
+if(ext_entrada == "md"):
+	ext_entrada = "markdown"
 
 for archivo in io.TextIOWrapper(search.stdout):
 	ejecutarPandoc(archivo, ext_entrada, ext_salida)
